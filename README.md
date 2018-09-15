@@ -9,4 +9,5 @@ The DineSafe Predictive Model uses Yelp reviews, and relevant business data to p
 next inspection. Using the prediction, establishments can make the necessary adjustments to prevent infractions.
 
 
-<img src="Results/Violations.png" width = 500>
+<img src="Results/Violations.png" width = 400 align = left> 
+<img src="Results/Violation_Severity.png" width = 400 align = right> 
