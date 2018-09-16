@@ -13,7 +13,3 @@ of the model are shown below.
 
 <img src="Results/Violations.png" width = 400 align = left> 
 <img src="Results/Violation_Severity.png" width = 400 align = right> 
-
-# Introduction
-
-  The goals of the project is to firsly, predict whether a given health inspection will result in a violation, which results in a binary prediction of a violation or a pass. A health code violation has three levels of severity, 'minor', 'significant', and 'crucial'.
