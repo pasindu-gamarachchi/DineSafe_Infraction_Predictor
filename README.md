@@ -10,9 +10,9 @@ next inspection. Using the prediction, establishments can make the necessary adj
 predicts whether a violation will occur for a given inspection, then an independent model predicts the type of prediction. The results
 of the model are shown below.
 
-
-<img src="Results/Violations.png" width = 400 >
-<img src="Results/Violation_Severity.png" width = 400 >
-
+<p float = "left">
+  <img src="Results/Violations.png" width = 400 >
+  <img src="Results/Violation_Severity.png" width = 400 >
+</p>
 
 # Introduction
