@@ -11,5 +11,8 @@ predicts whether a violation will occur for a given inspection, then an independ
 of the model are shown below.
 
 
-<img src="Results/Violations.png" width = 400 align = left> 
-<img src="Results/Violation_Severity.png" width = 400 align = right> 
+<img src="Results/Violations.png" width = 400 >
+<img src="Results/Violation_Severity.png" width = 400 >
+
+
+# Introduction
