@@ -132,6 +132,8 @@ The neighborhoods shaded in green have a more positive bias, this is may be due 
 
 As previously mentioned, there are two predictive models built, one to predict if a violation (of any type) will occur at a given inspection, and another model to predict the type of violation from the four classes, “Pass”, “Minor”, “Significant”, and “Crucial.
 
+## Violation Prediction
+
 ### Random Forest - Optimization
 
 Random Forest models parallelly and independently fit decision tress fitting an individual tree to a random subset of data points. The model performance of Random forests increases with additional estimators reaching a point of diminishing returns. The random forest will be an average over all the trees(estimators), as the individual cases of overfitting are not common, they will disappear on average. A grid search was done to establish the best parameters for the Random Forest model, with the following details about the grid search:
@@ -158,7 +160,7 @@ The ROC curve and Confusion Matrix for the best Random Forest model evaluated on
 
 As observed in the confusion matrix, the model does a reasonable job of predicting passes and infractions. However, it has a considerable number of false positives, misclassifying passes as infractions. 
 
-### XG Boost - Optimization
+### XGBoost - Optimization
 
 In addition to the Random Forest model, a Boosting method was considered by optimizing an XGBoost model. Boosting methods work by fitting a sequence of models, each of which is trained to focus on predictions the previous model got wrong, accomplished by re-weighting each data point so that the misclassified data contributes more to the error. Gradient Boosting fits each sub-model to the residuals of the previous models. With increasing number of estimators boosting methods can tend to overfit. A grid search was done to establish the best parameters for the XGBoost model, with the following details about the grid search:
 * The training data was optimized on the number of estimators, and the learning rate. 
@@ -182,7 +184,7 @@ The model with the best parameters was evaluated on the unseen testing data. The
 
 Interestingly, this model performs better than the best Random Forest model, with 44 less false positives and 11 less false negatives. 
 
-## Violation Prediction
+## Violation Type Prediction
 
 Three algorithms were optimized to predict the severity of a given inspection. Firstly, a KNN model was optimized, to obtain a baseline of the results, then Random Forest and XGBoost models were optimized.
 
