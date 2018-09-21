@@ -182,6 +182,19 @@ The model with the best parameters was evaluated on the unseen testing data. The
 
 Interestingly, this model performs better than the best Random Forest model, with 44 less false positives and 11 less false negatives. 
 
-	
+## Violation Prediction
+
+Three algorithms were optimized to predict the severity of a given inspection. Firstly, a KNN model was optimized, to obtain a baseline of the results, then Random Forest and XGBoost models were optimized.
+
+### KNN Model Optimization
+
+A KNN model was optimized to obtain a baseline of the results. KNN models are distance-based models and do not perform well when dealing with categorical data, as it is difficult to assign distance to nominal categorical data. Similar to the previous models, a grid search was done to optimize the hyper-parameters. The following provide details about the grid search:
+
+* The training data was optimized on the number of neighbors. 
+* A five-fold cross validation was performed.
+* The performance metric was accuracy.
+
+The results of the hyper-parameter optimization are shown below, with the best parameters being a model with 150 neighbors, achieving a cross validation score of 0.475.
+
 
 
