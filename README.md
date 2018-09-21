@@ -197,7 +197,7 @@ A KNN model was optimized to obtain a baseline of the results. KNN models are di
 The results of the hyper-parameter optimization are shown below, with the best parameters being a model with 150 neighbors, achieving a cross validation score of 0.475.
 
 <p align = "center">
-  <img src="Figures/MC_KNN_Optimization.png" width = 400 >
+  <img src="Figures/MC_KNN_Optimization.png" width = 500 >
   
 </p>
 
@@ -205,7 +205,7 @@ The results of the hyper-parameter optimization are shown below, with the best p
 The model with the best parameters were evaluated on the testing data set. The confusion matrix and one-vs-rest ROC curves, along with area under curve, F1 score, Precision, and Recall are shown below. As observed in the confusion matrix, the model fails to classify any ‘crucial’ infractions. This is primarily because the ‘crucial’ class is rare in the data set. It consists of ~ 1% of the training data set. As a solution to this problem, the classes were re-weighted, and the model was evaluated again, however, this did not result in a significant improvement in the results.
 
 <p align = "center">
-  <img src="Figures/MC_KNN_ConfusionMatrix.png" width = 400 >
+  <img src="Figures/MC_KNN_ConfusionMatrix.png" width = 500 >
   
 </p>
 
@@ -222,4 +222,54 @@ A similar approach as before was taken to optimize the Random Forest model, perf
 * A five-fold cross validation was performed.
 * The performance metric was accuracy.
 
+The results of the optimization are shown below. The cross-validation scores are better than those of the KNN models. The best parameters obtained were 2950 trees with a warm start set to True, achieving a peak cross-validation score of 0.519. The results do indicate that the warm start setting does not have a significant impact on the cross-validation scores.
+
+<p align = "center">
+  <img src="Figures/MC_RandomForest_Optimization.png" width = 500 >
+  
+</p>
+
+### Random Forest Evaluation
+
+As before, the model with the best parameters were evaluated on the training data. The confusion matrix and one-vs-rest ROC curves, along with area under curve, F1 score, Precision, and Recall are shown below.
+
+<p align = "center">
+  <img src="Figures/MC_RandomForest_ConfusionMatrix.png" width = 500 >
+  
+</p>
+
+<p align = "center">
+  <img src="Figures/MC_RandomForest_ROC.png" width = 800 >
+  
+</p>
+
+Similar to the KNN model, the Random Forest model fails to classify any ‘Crucial’ infractions. The model does reasonably well in predicting the ‘Pass’ class, with an F1 score of 65.10, however, the model does very poorly on the ‘Significant’ class with an F1 score of 18.88. Similar, to the ‘Crucial’ class, the ‘Significant’ class is rare in the training data set. The model was evaluated again after re-weighting the classes, but this did not result in an improvement in results.
+
+### XGBoost Optimization
+
+An XG Boost model was optimized by conducting a grid search on the training data, with the following details:
+* Optimized on the number of estimators and the learning rate.
+* Performed a five-fold cross-validation.
+* The performance metric was accuracy.
+
+The results of the optimization are shown below. A peak cross-validation score of 0.521 was achieved with 300 estimators and a learning rate of 0.01.
+
+<p align = "center">
+  <img src="Figures/MC_XGBoost_Optimization.png" width = 500 >
+  
+</p>
+
+### XGBoost Evaluation
+
+The XG Boost model with the best parameters was evaluated on the training data, and the confusion matrix, along with the precision, recall and F1 score are shown below. As with the Random Forest model, it performs well on the ‘Pass’ class but performs very poorly on the ‘Crucial’ and ‘Significant’ classes. Taking a deeper look at the ‘Crucial’ classification, 14 of the 17 labels are classified as ‘Minor’, 2 as ‘Pass’, and 1 ‘Significant’. Similarly, for the ‘Significant’ classification, 147 of the 325 labels are classified as ‘Minor’, 170 as ‘Pass’ and 8 correctly as ‘Significant’. It appears that the model does not identify a pattern of increasing severity. If the model did find this pattern, the misclassification of the ‘Crucial’ class would have less labels in the ‘Pass’ class and more in the ‘Significant’ class and then the ‘Minor’ class in that order. Similarly, the misclassifications in the ‘Significant’ class would follow have more labels in the ‘Minor’ class compared to the ‘Pass’ class.
+
+<p align = "center">
+  <img src="Figures/MC_XGBoost_ConfusionMatrix.png" width = 500 >
+  
+</p>
+
+# Conclusion/Future Work 
+
+Imbalanced classes can lead to poor model predictions, as observed in the violation severity prediction models. One of the attempted solutions was to re-weight the training data, however, this did not result in improvements. An additional solution would be to obtain more data, which could be accomplished by obtaining data from a city with similar socio-economic factors to that of Toronto.
+From the statistical analysis, it appeared that there was a bias based on the neighborhood of a business. This could possibly be adding erroneous bias to the models. I plan to re-optimize and evaluate the models without using the ‘neighborhood’ feature in the dataset, this could possibly lead to better results. 
 
