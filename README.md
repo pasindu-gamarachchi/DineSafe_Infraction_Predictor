@@ -197,7 +197,7 @@ A KNN model was optimized to obtain a baseline of the results. KNN models are di
 The results of the hyper-parameter optimization are shown below, with the best parameters being a model with 150 neighbors, achieving a cross validation score of 0.475.
 
 <p align = "center">
-  <img src="Figures/MC_KNN_Optimization.png" width = 800 >
+  <img src="Figures/MC_KNN_Optimization.png" width = 600 >
   
 </p>
 
@@ -205,12 +205,12 @@ The results of the hyper-parameter optimization are shown below, with the best p
 The model with the best parameters were evaluated on the testing data set. The confusion matrix and one-vs-rest ROC curves, along with area under curve, F1 score, Precision, and Recall are shown below. As observed in the confusion matrix, the model fails to classify any ‘crucial’ infractions. This is primarily because the ‘crucial’ class is rare in the data set. It consists of ~ 1% of the training data set. As a solution to this problem, the classes were re-weighted, and the model was evaluated again, however, this did not result in a significant improvement in the results.
 
 <p align = "center">
-  <img src="Figures/MC_KNN_ConfusionMatrix.png" width = 800 >
+  <img src="Figures/MC_KNN_ConfusionMatrix.png" width = 600 >
   
 </p>
 
 <p align = "center">
-  <img src="Figures/MC_KNN_ROC.png" width = 800 >
+  <img src="Figures/MC_KNN_ROC.png" width = 600 >
   
 </p>
 
