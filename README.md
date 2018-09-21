@@ -142,7 +142,7 @@ Random Forest models parallelly and independently fit decision tress fitting an 
 
 The results of the hyper-parameter optimization are shown below, with the best parameters being a model with 700 trees, set to a condition of false for the warm start. The highest cross-validation score was 0.671.
 
-<p float = "center">
+<p align = "center">
   <img src= "Figures/RF_Binary_optimization.png" width = 600 >
 </p>
 
@@ -150,9 +150,15 @@ The results of the hyper-parameter optimization are shown below, with the best p
 
 The ROC curve and Confusion Matrix for the best Random Forest model evaluated on the unseen test data, along with the area under the ROC curve, F1 score, Precision and Recall are shown below.
 	
-<p float = "left">
-  <img src="Figures/RF_Binary_Conf_Mat.png" width = 450  >
+<p align = "left">
+  <img src="Figures/RF_Binary_Conf_Mat.png" width = 400  >
+  
+</p>
+
+<p align = "left">
+  
   <img src="Figures/RF_ROC_AUC.png" width = 350 >
+
 </p>
 
 As observed in the confusion matrix, the model does a reasonable job of predicting passes and infractions. However, it has a considerable number of false positives, misclassifying passes as infractions. 
