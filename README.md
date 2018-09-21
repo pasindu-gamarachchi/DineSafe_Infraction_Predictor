@@ -106,7 +106,7 @@ To gain insight into the which features contributed to a violation a spearman r-
 
 The Spearman’s correlation is a statistical measure of the strength of the monotonic relationship two sets of data. The interpretation of the statistics is similar to that of the Pearson correlation coefficient. The following results show the Spearman R-value for features, that had spearman r values greater than 0.1 and a p-value less than 0.05.
 
-<p float = "center">
+<p align = "center">
   <img src= "Figures/R_values_v5.png" width = 600 >
 </p>
 
@@ -115,7 +115,7 @@ The Spearman’s correlation is a statistical measure of the strength of the mon
 The dataset contains information regarding the type of an establishment. The types can vary from ‘Bake shops’, ‘Butcher Shop’, to ‘Mobile Food Preparation Premises’, which includes a total of 42 different establishment types. 
 With the goal of checking if certain business types were treated differently a chi-squared test was performed. The refined data set contains data about 5639 health inspections on 5639 businesses. From the 5639 inspections, 3211 resulted in a violation (‘Minor’, ‘Significant’, or ‘Crucial’) and 2428 resulted in a ‘Pass’. These were the expected values for which the comparison is made against. Grouped statistics were obtained for all the establishment types, summing up the violation and pass count. The results of the chi-squared test are shown below, for establishment types that had p-values less than 0.05.  The Infraction ratio is the ratio of the sum of infractions by the total number of inspections.
 
-<p float = "center">
+<p align = "center">
   <img src= "Figures/Establishment_Type_Chi.png" width = 600 >
 </p>
 
@@ -124,7 +124,7 @@ With the goal of checking if certain business types were treated differently a c
 A similar analysis was done to check for differences between the outcomes of an inspection when the neighborhood of a business was taken into consideration. Grouped statistics were obtained for 72 distinct neighborhoods. Similar to the previous analysis, of the 5639 inspections 3211 resulted in violations and 2428 resulted in a ‘Pass’. The results of the Chi-Squared test are shown below for neighborhoods with p-values less than 0.05. As before, the Infraction ratio is the ratio of the sum of infractions by the total number of inspections.
 The neighborhoods shaded in green have a more positive bias, this is may be due to certain socio-economic factors that are not present in the data. The neighborhoods shaded in red have a more negative bias. It is also likely that some of these neighborhoods have a higher concentration of restaurants, which from the previous analysis was shown to have a more negative bias than the average.
 
-<p float = "center">
+<p align = "center">
   <img src= "Figures/Neighborhood_Chi.png" width = 600 >
 </p>
 
@@ -150,16 +150,11 @@ The results of the hyper-parameter optimization are shown below, with the best p
 
 The ROC curve and Confusion Matrix for the best Random Forest model evaluated on the unseen test data, along with the area under the ROC curve, F1 score, Precision and Recall are shown below.
 	
-<p align = "left">
-  <img src="Figures/RF_Binary_Conf_Mat.png" width = 400  >
+<p align = "Center">
+  <img src="Figures/RF_Combined_Results_Binary.png" width = 800  >
   
 </p>
 
-<p align = "left">
-  
-  <img src="Figures/RF_ROC_AUC.png" width = 350 >
-
-</p>
 
 As observed in the confusion matrix, the model does a reasonable job of predicting passes and infractions. However, it has a considerable number of false positives, misclassifying passes as infractions. 
 
@@ -172,7 +167,7 @@ In addition to the Random Forest model, a Boosting method was considered by opti
 
 The results of the hyper-parameter optimization are shown below, with the best parameters being a model with 950 estimators, with a learning rate of 0.03, achieving a highest cross-validation score of 0.673.
 
-<p float = "center">
+<p align = "center">
   <img src= "Figures/XG_Boos_Binary_Opt.png" width = 600 >
 </p>
 
@@ -180,9 +175,9 @@ The results of the hyper-parameter optimization are shown below, with the best p
 
 The model with the best parameters was evaluated on the unseen testing data. The ROC curve and confusion matrix, along with the area under the ROC curve, F1 score, Precision and Recall are shown below.
 
-<p float = "left">
-  <img src="Figures/XG_Boost_Binary_Conf_Matr.png" width = 400 >
-  <img src="Figures/XG_Boost_Binary_ROC.png" width = 400 >
+<p align = "center">
+  <img src="Figures/XGBoost_Combined_Results_Binary.png" width = 800 >
+  
 </p>
 
 Interestingly, this model performs better than the best Random Forest model, with 44 less false positives and 11 less false negatives. 
