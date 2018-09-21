@@ -94,4 +94,18 @@ Combining the two datasets resulted in reducing the data to 5639 records, which 
 	A great deal of the features regarding Business practices were attributes such as ‘Good for Kids’ or ‘Dogs Allowed’, which results in a binary outcome. The null values for these features were set to 0. Additional features which had categorical outcomes were assigned dummy variables.
 	Business opening and closing times could provide key insights into whether an inspection will result in a violation. The null values in opening and closing times for a given day were filled by the values of the opening and closing times for which data is available. To elaborate, if a business is open from Monday through Saturday, but closed on Sundays, the null values in Sunday were filled by the Monday times. If no values on opening and closing times were found, the mean time values were assigned to the null values.
 
+#Statistics
+
+##Spearman-R Test
+	To gain insight into the which features contributed to a violation a spearman r-test was conducted. The four classes for severity were assigned numerical values for increasing severity as follows:
+* ‘Pass’ was assigned a value of 0.
+* ‘Minor’ was assigned a value of 1.
+* ‘Significant’ was assigned a value of 2.
+* ‘Crucial’ was assigned a value of 3.
+
+The Spearman’s correlation is a statistical measure of the strength of the monotonic relationship two sets of data. The interpretation of the statistics is similar to that of the Pearson correlation coefficient. The following results show the Spearman R-value for features, that had spearman r values greater than 0.1 and a p-value less than 0.05.
+
+
+
+
 
