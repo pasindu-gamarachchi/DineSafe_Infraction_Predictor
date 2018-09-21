@@ -89,15 +89,16 @@ The Yelp DS contains important information regarding business practices, and the
 
 Combining the two datasets resulted in reducing the data to 5639 records, which includes data regarding business practices of 5639 businesses, as well as the outcome of their most recent inspection.
 
-##Cleaning Combined Dataset
-	The combined dataset contains data such as ‘Action’, ‘Amount Fined’, & ‘Court Outcome’, which are dependent upon the ‘Severity’ of a violation. The model aims to predict the ‘Severity’ of a violation. Including columns such as ‘Action’ and ‘Amount Fined’ would result in a data leak, therefore, these columns were removed from the dataset.
-	A great deal of the features regarding Business practices were attributes such as ‘Good for Kids’ or ‘Dogs Allowed’, which results in a binary outcome. The null values for these features were set to 0. Additional features which had categorical outcomes were assigned dummy variables.
-	Business opening and closing times could provide key insights into whether an inspection will result in a violation. The null values in opening and closing times for a given day were filled by the values of the opening and closing times for which data is available. To elaborate, if a business is open from Monday through Saturday, but closed on Sundays, the null values in Sunday were filled by the Monday times. If no values on opening and closing times were found, the mean time values were assigned to the null values.
+## Cleaning Combined Dataset
 
-#Statistics
+The combined dataset contains data such as ‘Action’, ‘Amount Fined’, & ‘Court Outcome’, which are dependent upon the ‘Severity’ of a violation. The model aims to predict the ‘Severity’ of a violation. Including columns such as ‘Action’ and ‘Amount Fined’ would result in a data leak, therefore, these columns were removed from the dataset.
+A great deal of the features regarding Business practices were attributes such as ‘Good for Kids’ or ‘Dogs Allowed’, which results in a binary outcome. The null values for these features were set to 0. Additional features which had categorical outcomes were assigned dummy variables.
+Business opening and closing times could provide key insights into whether an inspection will result in a violation. The null values in opening and closing times for a given day were filled by the values of the opening and closing times for which data is available. To elaborate, if a business is open from Monday through Saturday, but closed on Sundays, the null values in Sunday were filled by the Monday times. If no values on opening and closing times were found, the mean time values were assigned to the null values.
 
-##Spearman-R Test
-	To gain insight into the which features contributed to a violation a spearman r-test was conducted. The four classes for severity were assigned numerical values for increasing severity as follows:
+# Statistical Analysis
+
+## Spearman-R Test
+To gain insight into the which features contributed to a violation a spearman r-test was conducted. The four classes for severity were assigned numerical values for increasing severity as follows:
 * ‘Pass’ was assigned a value of 0.
 * ‘Minor’ was assigned a value of 1.
 * ‘Significant’ was assigned a value of 2.
@@ -109,19 +110,83 @@ The Spearman’s correlation is a statistical measure of the strength of the mon
   <img src= "Figures/R_values_v5.png" width = 600 >
 </p>
 
-##Chi-Squared Tests – Establishment Type
-	The dataset contains information regarding the type of an establishment. The types can vary from ‘Bake shops’, ‘Butcher Shop’, to ‘Mobile Food Preparation Premises’, which includes a total of 42 different establishment types. 
-	With the goal of checking if certain business types were treated differently a chi-squared test was performed. The refined data set contains data about 5639 health inspections on 5639 businesses. From the 5639 inspections, 3211 resulted in a violation (‘Minor’, ‘Significant’, or ‘Crucial’) and 2428 resulted in a ‘Pass’. These were the expected values for which the comparison is made against. Grouped statistics were obtained for all the establishment types, summing up the violation and pass count. The results of the chi-squared test are shown below, for establishment types that had p-values less than 0.05.  The Infraction ratio is the ratio of the sum of infractions by the total number of inspections.
+## Chi-Squared Tests – Establishment Type
+
+The dataset contains information regarding the type of an establishment. The types can vary from ‘Bake shops’, ‘Butcher Shop’, to ‘Mobile Food Preparation Premises’, which includes a total of 42 different establishment types. 
+With the goal of checking if certain business types were treated differently a chi-squared test was performed. The refined data set contains data about 5639 health inspections on 5639 businesses. From the 5639 inspections, 3211 resulted in a violation (‘Minor’, ‘Significant’, or ‘Crucial’) and 2428 resulted in a ‘Pass’. These were the expected values for which the comparison is made against. Grouped statistics were obtained for all the establishment types, summing up the violation and pass count. The results of the chi-squared test are shown below, for establishment types that had p-values less than 0.05.  The Infraction ratio is the ratio of the sum of infractions by the total number of inspections.
 
 <p float = "center">
   <img src= "Figures/Establishment_Type_Chi.png" width = 600 >
 </p>
 
-##Chi-Squared Tests – Neighborhood
-	A similar analysis was done to check for differences between the outcomes of an inspection when the neighborhood of a business was taken into consideration. Grouped statistics were obtained for 72 distinct neighborhoods. Similar to the previous analysis, of the 5639 inspections 3211 resulted in violations and 2428 resulted in a ‘Pass’. The results of the Chi-Squared test are shown below for neighborhoods with p-values less than 0.05. As before, the Infraction ratio is the ratio of the sum of infractions by the total number of inspections.
+## Chi-Squared Tests – Neighborhood
+
+A similar analysis was done to check for differences between the outcomes of an inspection when the neighborhood of a business was taken into consideration. Grouped statistics were obtained for 72 distinct neighborhoods. Similar to the previous analysis, of the 5639 inspections 3211 resulted in violations and 2428 resulted in a ‘Pass’. The results of the Chi-Squared test are shown below for neighborhoods with p-values less than 0.05. As before, the Infraction ratio is the ratio of the sum of infractions by the total number of inspections.
 The neighborhoods shaded in green have a more positive bias, this is may be due to certain socio-economic factors that are not present in the data. The neighborhoods shaded in red have a more negative bias. It is also likely that some of these neighborhoods have a higher concentration of restaurants, which from the previous analysis was shown to have a more negative bias than the average.
 
 <p float = "center">
   <img src= "Figures/Neighborhood_Chi.png" width = 600 >
 </p>
+
+# Model Optimization and Results
+
+As previously mentioned, there are two predictive models built, one to predict if a violation (of any type) will occur at a given inspection, and another model to predict the type of violation from the four classes, “Pass”, “Minor”, “Significant”, and “Crucial.
+
+### Random Forest - Optimization
+
+Random Forest models parallelly and independently fit decision tress fitting an individual tree to a random subset of data points. The model performance of Random forests increases with additional estimators reaching a point of diminishing returns. The random forest will be an average over all the trees(estimators), as the individual cases of overfitting are not common, they will disappear on average. A grid search was done to establish the best parameters for the Random Forest model, with the following details about the grid search:
+
+* The training data was optimized on the number of trees, and the warm start condition. 
+* A 5-fold cross-validation was performed.
+* The performance metric was accuracy.
+
+The results of the hyper-parameter optimization are shown below, with the best parameters being a model with 700 trees, set to a condition of false for the warm start. The highest cross-validation score was 0.671.
+
+<p align = "center">
+  <img src= "Figures/RF_Binary_optimization.png" width = 600 >
+</p>
+
+### Random Forests – Model Evaluation
+
+The ROC curve and Confusion Matrix for the best Random Forest model evaluated on the unseen test data, along with the area under the ROC curve, F1 score, Precision and Recall are shown below.
+	
+<p align = "left">
+  <img src="Figures/RF_Binary_Conf_Mat.png" width = 400  >
+  
+</p>
+
+<p align = "left">
+  
+  <img src="Figures/RF_ROC_AUC.png" width = 350 >
+
+</p>
+
+As observed in the confusion matrix, the model does a reasonable job of predicting passes and infractions. However, it has a considerable number of false positives, misclassifying passes as infractions. 
+
+### XG Boost - Optimization
+
+In addition to the Random Forest model, a Boosting method was considered by optimizing an XGBoost model. Boosting methods work by fitting a sequence of models, each of which is trained to focus on predictions the previous model got wrong, accomplished by re-weighting each data point so that the misclassified data contributes more to the error. Gradient Boosting fits each sub-model to the residuals of the previous models. With increasing number of estimators boosting methods can tend to overfit. A grid search was done to establish the best parameters for the XGBoost model, with the following details about the grid search:
+* The training data was optimized on the number of estimators, and the learning rate. 
+* A 5-fold cross-validation was performed.
+* The performance metric was accuracy.
+
+The results of the hyper-parameter optimization are shown below, with the best parameters being a model with 950 estimators, with a learning rate of 0.03, achieving a highest cross-validation score of 0.673.
+
+<p float = "center">
+  <img src= "Figures/XG_Boos_Binary_Opt.png" width = 600 >
+</p>
+
+### XGBoost – Model Evaluation
+
+The model with the best parameters was evaluated on the unseen testing data. The ROC curve and confusion matrix, along with the area under the ROC curve, F1 score, Precision and Recall are shown below.
+
+<p float = "left">
+  <img src="Figures/XG_Boost_Binary_Conf_Matr.png" width = 400 >
+  <img src="Figures/XG_Boost_Binary_ROC.png" width = 400 >
+</p>
+
+Interestingly, this model performs better than the best Random Forest model, with 44 less false positives and 11 less false negatives. 
+
+	
+
 
