@@ -105,7 +105,23 @@ Combining the two datasets resulted in reducing the data to 5639 records, which 
 
 The Spearman’s correlation is a statistical measure of the strength of the monotonic relationship two sets of data. The interpretation of the statistics is similar to that of the Pearson correlation coefficient. The following results show the Spearman R-value for features, that had spearman r values greater than 0.1 and a p-value less than 0.05.
 
+<p float = "center">
+  <img src= "Figures/R_values_v5.png" width = 600 >
+</p>
 
+##Chi-Squared Tests – Establishment Type
+	The dataset contains information regarding the type of an establishment. The types can vary from ‘Bake shops’, ‘Butcher Shop’, to ‘Mobile Food Preparation Premises’, which includes a total of 42 different establishment types. 
+	With the goal of checking if certain business types were treated differently a chi-squared test was performed. The refined data set contains data about 5639 health inspections on 5639 businesses. From the 5639 inspections, 3211 resulted in a violation (‘Minor’, ‘Significant’, or ‘Crucial’) and 2428 resulted in a ‘Pass’. These were the expected values for which the comparison is made against. Grouped statistics were obtained for all the establishment types, summing up the violation and pass count. The results of the chi-squared test are shown below, for establishment types that had p-values less than 0.05.  The Infraction ratio is the ratio of the sum of infractions by the total number of inspections.
 
+<p float = "center">
+  <img src= "Figures/Establishment_Type_Chi.png" width = 600 >
+</p>
 
+##Chi-Squared Tests – Neighborhood
+	A similar analysis was done to check for differences between the outcomes of an inspection when the neighborhood of a business was taken into consideration. Grouped statistics were obtained for 72 distinct neighborhoods. Similar to the previous analysis, of the 5639 inspections 3211 resulted in violations and 2428 resulted in a ‘Pass’. The results of the Chi-Squared test are shown below for neighborhoods with p-values less than 0.05. As before, the Infraction ratio is the ratio of the sum of infractions by the total number of inspections.
+The neighborhoods shaded in green have a more positive bias, this is may be due to certain socio-economic factors that are not present in the data. The neighborhoods shaded in red have a more negative bias. It is also likely that some of these neighborhoods have a higher concentration of restaurants, which from the previous analysis was shown to have a more negative bias than the average.
+
+<p float = "center">
+  <img src= "Figures/Neighborhood_Chi.png" width = 600 >
+</p>
 
