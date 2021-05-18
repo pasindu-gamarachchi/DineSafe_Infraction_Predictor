@@ -2,3 +2,5 @@ Data/logfiles/*
 Data/dataFiles/*
 Data/oldFiles/*
 Data/dinesafe_v2.xml
+
+.idea/*
