@@ -2,5 +2,6 @@ Data/logfiles/*
 Data/dataFiles/*
 Data/oldFiles/*
 Data/dinesafe_v2.xml
-
+Modelling/.ipynb_checkpoints/*
+Modelling/old_files/*
 .idea/*

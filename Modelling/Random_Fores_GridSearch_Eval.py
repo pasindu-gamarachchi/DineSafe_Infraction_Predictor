@@ -14,6 +14,7 @@ from sklearn import preprocessing
 from sklearn import pipeline
 from tempfile import mkdtemp
 import warnings
+
 warnings.filterwarnings("ignore")
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
@@ -26,25 +27,7 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import roc_curve, auc
 from sklearn.multiclass import OneVsRestClassifier
 from matplotlib import pyplot as plt
-
-
-warnings.filterwarnings("ignore")
-X_train_val = pd.read_csv('Training_X_w_est_id.csv')
-y_train_val = pd.read_csv('Testing_y_w_est_id.csv')
-
-cachedir = mkdtemp()
-
-estimators = [('normalize', preprocessing.StandardScaler()),
-              ('model', RandomForestClassifier())]
-pipe = pipeline.Pipeline(estimators, cachedir)
-
-num_trees = [ 50 + 50*i for i in range(0,2)]
-num_trees;
-ws =[ True, False]
-params =  {'model__n_estimators' : num_trees , 'model__warm_start' : ws}
-grid = GridSearchCV(pipe, param_grid = params, cv =5)
-fittedgrid = grid.fit(X_train_val, y_train_val)
-grid_scores = fittedgrid.grid_scores_
+import itertools
 
 
 def grid_scores_to_df(grid_scores):
@@ -62,36 +45,10 @@ def grid_scores_to_df(grid_scores):
     df = pd.DataFrame(rows)
     return df
 
-df_means = grid_scores_to_df(fittedgrid.grid_scores_)
 
 def add_cv_mean(df, cv, col_name):
-    for i in range (0,len(df),cv):
-        df.loc[i, col_name] = np.mean(df.loc[i:(i+cv),'score'])
-
-add_cv_mean(df_means,5,'mean')
-df_new =df_means.dropna()
-sns.set(style="ticks")
-
-means_true =df_new[df_new['model__warm_start']== True]['mean']
-means_false =df_new[df_new['model__warm_start']== False]['mean']
-x =np.unique(df_new['model__n_estimators'])
-fig = plt.figure()
-plt.plot(x, means_true, label = 'ws:True')
-plt.plot(x, means_false, label = 'ws:False')
-plt.xlabel('Number of Trees', size = 14)
-plt.xticks(fontsize = 12)
-plt.yticks(fontsize =12)
-plt.ylabel('Cross-Val Score', size = 14)
-plt.legend(loc='lower right', fontsize =14)
-plt.title('Parameter Optimization', size = 18)
-my_dpi=96
-plt.savefig('RF_parameter_opt_MultiClass_V2.png',dpi=my_dpi*2, bbox_inches ='tight')
-
-RF_predicts = fittedgrid.predict(X_test.drop(['establishment_id'], axis =1))
-RF_probs = fittedgrid.predict_proba(X_test.drop(['establishment_id'], axis =1))
-
-RF_best_score =fittedgrid.score(X_test.drop(['establishment_id'], axis =1), y_test)
-print(RF_best_score)
+    for i in range(0, len(df), cv):
+        df.loc[i, col_name] = np.mean(df.loc[i:(i + cv), 'score'])
 
 
 def plot_confusion_matrix(cm, classes,
@@ -128,60 +85,108 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 
-confusion = confusion_matrix(y_test, RF_predicts)
-class_names =['Crucial', 'Minor', 'None/Pass', 'Significant']
 
-plot_confusion_matrix(confusion, classes=class_names,
-                      title='Confusion matrix, without normalization')
-plt.savefig('RF_Conf_multiclass_mat.png',dpi=my_dpi*2, bbox_inches ='tight')
+if __name__ == '__main__':
+    warnings.filterwarnings("ignore")
+    X_train_val = pd.read_csv('../Data/dataFiles/Training_X_w_est_id.csv')
+    y_train_val = pd.read_csv('../Data/dataFiles/Training_y_w_est_id.csv')
+    X_test = pd.read_csv('../Data/dataFiles/Testing_X_w_est_id.csv')
+    y_test = pd.read_csv('../Data/dataFiles/Testing_y_w_est_id.csv')
+    cachedir = mkdtemp()
 
-X_train = pd.read_csv('Training_X_w_est_id.csv')
-X_train = X_train.drop(['establishment_id'], axis =1)
-X_test = X_test.drop(['establishment_id'], axis =1)
-y_train= pd.read_csv('Training_y_w_est_id.csv',header=None)
-classifier = OneVsRestClassifier(fittedgrid.best_estimator_)
+    estimators = [('normalize', preprocessing.StandardScaler()),
+                  ('model', RandomForestClassifier())]
+    pipe = pipeline.Pipeline(estimators, cachedir)
 
-scaler = StandardScaler()
-scaler.fit(X_train)
-X_train = scaler.transform(X_train)
-X_test = scaler.transform(X_test)
+    num_trees = [50 + 50 * i for i in range(0, 2)]
 
+    ws = [True, False]
+    params = {'model__n_estimators': num_trees, 'model__warm_start': ws}
+    grid = GridSearchCV(pipe, param_grid=params, cv=5)
+    fittedgrid = grid.fit(X_train_val, y_train_val)
+    grid_scores = fittedgrid.grid_scores_
 
-titles =['Crucial', 'Minor', 'None', 'Significant']
-f1 =[]
-presc=[]
-rec =[]
-for i in range(0, len(classifier.classes_)):
-    
-    y_test_1 =np.where(y_test ==classifier.classes_[i],1,0)
-    fpr, tpr, _ = roc_curve(y_test_1, probs[:,i])
-    roc_auc = auc(fpr, tpr)
-    preds_1 =np.where(preds ==classifier.classes_[i],1,0)
+    df_means = grid_scores_to_df(fittedgrid.grid_scores_)
 
+    add_cv_mean(df_means, 5, 'mean')
+    df_new = df_means.dropna()
+    sns.set(style="ticks")
 
-    f1.append((100*f1_score(preds_1,y_test_1)))
-    presc.append(precision_score(preds_1,y_test_1))
-    rec.append(recall_score(preds_1,y_test_1))
+    means_true = df_new[df_new['model__warm_start'] == True]['mean']
+    means_false = df_new[df_new['model__warm_start'] == False]['mean']
+    x = np.unique(df_new['model__n_estimators'])
+    fig = plt.figure()
+    plt.plot(x, means_true, label='ws:True')
+    plt.plot(x, means_false, label='ws:False')
+    plt.xlabel('Number of Trees', size=14)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.ylabel('Cross-Val Score', size=14)
+    plt.legend(loc='lower right', fontsize=14)
+    plt.title('Parameter Optimization', size=18)
+    my_dpi = 96
+    plt.savefig('RF_parameter_opt_MultiClass_V2.png', dpi=my_dpi * 2, bbox_inches='tight')
 
-    plt.figure()
-    lw = 2
-    plt.plot(fpr, tpr, 
-        lw=lw )
-    plt.plot([0, 1], [0, 1],  lw=lw, linestyle='--')
-    plt.xlabel('False Positive Rate', size = 14)
-    plt.ylabel('True Positive Rate', size = 14)
-    plt.title(titles[i], size = 16)
+    RF_predicts = fittedgrid.predict(X_test.drop(['establishment_id'], axis=1))
+    RF_probs = fittedgrid.predict_proba(X_test.drop(['establishment_id'], axis=1))
 
-    plt.text(0.05,0.95, 'AUC = %0.2f' % roc_auc, color ='firebrick' )
-    plt.text(0.05,0.85, 'F1 = %0.2f' % f1[i] , color ='firebrick')
-    plt.text(0.05,0.75, 'Precision = %0.2f' % presc[i] , color ='firebrick' )
-    plt.text(0.05,0.65, 'Recall = %0.2f' % rec[i] , color ='firebrick' )
-    
-    plt.xticks(fontsize = 12)
-    plt.yticks(fontsize =12)
-    
-    filename = titles[i] + 'roc_curve_RandomForest_v2.png'
-    plt.savefig(filename,dpi=my_dpi*2, bbox_inches ='tight')
-    
-    plt.show()
-    plt.plot
+    RF_best_score = fittedgrid.score(X_test.drop(['establishment_id'], axis=1), y_test)
+    print(RF_best_score)
+
+    confusion = confusion_matrix(y_test, RF_predicts)
+    class_names = ['Crucial', 'Minor', 'None/Pass', 'Significant']
+
+    plot_confusion_matrix(confusion, classes=class_names,
+                          title='Confusion matrix, without normalization')
+    plt.savefig('RF_Conf_multiclass_mat.png', dpi=my_dpi * 2, bbox_inches='tight')
+
+    X_train = pd.read_csv('../Data/dataFiles/Training_X_w_est_id.csv')
+    X_train = X_train.drop(['establishment_id'], axis=1)
+    X_test = X_test.drop(['establishment_id'], axis=1)
+    y_train = pd.read_csv('../Data/dataFiles/Training_y_w_est_id.csv', header=None)
+    classifier = OneVsRestClassifier(fittedgrid.best_estimator_)
+
+    scaler = StandardScaler()
+    scaler.fit(X_train)
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    titles = ['Crucial', 'Minor', 'None', 'Significant']
+    f1 = []
+    presc = []
+    rec = []
+    preds = classifier.fit(X_train, y_train).predict(X_test)
+    probs = classifier.fit(X_train, y_train).predict_proba(X_test)
+
+    # Plot ROC Curve
+    for i in range(0, len(classifier.classes_)):
+        y_test_1 = np.where(y_test == classifier.classes_[i], 1, 0)
+        fpr, tpr, _ = roc_curve(y_test_1, probs[:, i])
+        roc_auc = auc(fpr, tpr)
+        preds_1 = np.where(preds == classifier.classes_[i], 1, 0)
+
+        f1.append((100 * f1_score(preds_1, y_test_1)))
+        presc.append(precision_score(preds_1, y_test_1))
+        rec.append(recall_score(preds_1, y_test_1))
+
+        plt.figure()
+        lw = 2
+        plt.plot(fpr, tpr,
+                 lw=lw)
+        plt.plot([0, 1], [0, 1], lw=lw, linestyle='--')
+        plt.xlabel('False Positive Rate', size=14)
+        plt.ylabel('True Positive Rate', size=14)
+        plt.title(titles[i], size=16)
+
+        plt.text(0.05, 0.95, 'AUC = %0.2f' % roc_auc, color='firebrick')
+        plt.text(0.05, 0.85, 'F1 = %0.2f' % f1[i], color='firebrick')
+        plt.text(0.05, 0.75, 'Precision = %0.2f' % presc[i], color='firebrick')
+        plt.text(0.05, 0.65, 'Recall = %0.2f' % rec[i], color='firebrick')
+
+        plt.xticks(fontsize=12)
+        plt.yticks(fontsize=12)
+
+        filename = titles[i] + 'roc_curve_RandomForest_v2.png'
+        plt.savefig(filename, dpi=my_dpi * 2, bbox_inches='tight')
+
+        plt.show()
